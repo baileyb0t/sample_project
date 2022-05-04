@@ -4,32 +4,26 @@
 # =========================================
 # sample_project/import/preproc/Makefile
 
-input := input/filename.ext
-output := output/filename.ext
+compas_f = 'input/compas-scores-raw.csv'
+cox_all_f = 'input/cox-violent-parsed.csv'
+cox_filt_f = 'input/cox-violent-parsed_filt.csv'
+fairml_f = 'input/propublica_data_for_fairml.csv'
 
-src_py := src/code.py
-src_R := src/code.R
+.PHONY: all clean output
 
-.PHONY: all clean
-
-all: $(output)
+all: output
 
 clean: 
 	-rm -r output/*
 
-$(output): \
-		$(src_py) \
+output: \
+		src/import.py \
 		$(input)
 	-mkdir output
 	python3 $< \
-		--input=$(input) \
-		--output=$@
+		--compas=$(compas_f) \
+		--cox_all=$(cox_all_f) \
+		--cox_filt=$(cox_filt_f) \
+		--fairml=$(fairml_f)
 
-$(output):\
-		$(src_R) \
-$(input)
-	-mkdir output
-	Rscript --vanilla $< \
-		--input=$(input) \
-		--output=$@
 # done.
